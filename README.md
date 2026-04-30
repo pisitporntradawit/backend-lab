@@ -18,7 +18,7 @@ go run main.go
 [Your Name]
 EOF
 
-# 5. Commit & Push
+# Commit & Push
 git add .
 git commit -m "Initial lab project setup"
 git push origin main
