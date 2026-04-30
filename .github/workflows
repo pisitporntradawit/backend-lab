@@ -1,0 +1,26 @@
+name: My First DevSecOps Pipeline
+
+# 1. สั่งให้ทำงานทุกครั้งที่มีคน Push โค้ดเข้ามา
+on:
+  push:
+    branches: [ "main" ]
+
+# 2. กำหนดงาน (Jobs) ที่ต้องทำ
+jobs:
+  scan-vulnerabilities:
+    name: Security Scan by Trivy
+    runs-on: ubuntu-latest # ขอยืมเครื่อง Server ฟรีจาก GitHub มาใช้รัน
+
+    steps:
+      # Step 1: ดึงโค้ดของเราลงมาที่เครื่อง Server
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: เรียกใช้ยาม (Trivy) มาสแกนหาช่องโหว่
+      - name: Run Trivy Vulnerability Scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs' # สแกนไฟล์ในโฟลเดอร์
+          format: 'table' # แสดงผลเป็นตารางอ่านง่ายๆ
+          severity: 'HIGH,CRITICAL' # สนใจเฉพาะช่องโหว่ระดับสูงและวิกฤต
+          exit-code: '1' # ไฮไลต์สำคัญ: ถ้าเจอช่องโหว่ ให้สั่ง Pipeline "พัง" (Fail) ทันที!
