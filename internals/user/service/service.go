@@ -5,12 +5,14 @@ import (
 	"context"
 	"fmt"
 	"golang.org/x/crypto/bcrypt"
+	"github.com/google/uuid"
 )
 
 // Interface ให้ test ได้โดยไม่ต้องมี DB จริง
 type UserRepository interface {
 	Getuser(ctx context.Context) ([]model.UserModel, error)
-    CreateUser(ctx context.Context, newUser *model.UserModel) error
+	CreateUser(ctx context.Context, newUser *model.UserModel) error
+	GetUserByID(ctx context.Context, id string) (*model.UserModel,error)
 }
 
 type Service struct {
@@ -19,14 +21,6 @@ type Service struct {
 
 func NewService(repo UserRepository) *Service {
 	return &Service{repo: repo}
-}
-
-func (s *Service) Getuser(ctx context.Context) ([]model.UserModel, error) {
-	resultUser, err := s.repo.Getuser(ctx)
-	if err != nil {
-		return nil, fmt.Errorf("service.getUser: %w", err)
-	}
-	return resultUser, nil
 }
 
 func (s *Service) CreateUser(ctx context.Context, newUser *model.UserModel) error {
@@ -46,5 +40,20 @@ func (s *Service) CreateUser(ctx context.Context, newUser *model.UserModel) erro
 	if err = s.repo.CreateUser(ctx, newUser); err != nil {
 		return fmt.Errorf("service.create user failed %w", err)
 	}
-    return nil
+	return nil
+}
+
+func (s *Service) Getuser(ctx context.Context) ([]model.UserModel, error) {
+	resultUser, err := s.repo.Getuser(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("service.getUser: %w", err)
+	}
+	return resultUser, nil
+}
+
+func (s *Service) GetUserByID(ctx context.Context, id string) (*model.UserModel, error) {
+	if _, err := uuid.Parse(id); err != nil {
+		return nil, fmt.Errorf("invalid id: %w", err)
+	}
+	return s.repo.GetUserByID(ctx, id)
 }

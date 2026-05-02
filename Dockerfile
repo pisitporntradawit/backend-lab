@@ -11,7 +11,7 @@ RUN go mod download
 COPY . .
 
 # Build binary
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
+RUN CGO_ENABLED=0 GOOS=linux go build -a -o main .
 
 # Runtime stage
 FROM alpine:latest
@@ -27,8 +27,6 @@ WORKDIR /home/dev
 
 # Copy binary from builder
 COPY --from=builder /app/main ./
-
-
 
 # Expose port (ตามความเหมาะสม)
 EXPOSE 30606

@@ -13,6 +13,7 @@ import (
 type userInterface interface {
     GetUser(c *gin.Context)
     CreateUser(c *gin.Context)
+    GetUserByID(c *gin.Context)
 }
 
 type productInterface interface {
@@ -25,6 +26,7 @@ func RouterAPI(user userInterface, product productInterface) *gin.Engine {
     r.Use(cors.New(corsConfig()))
     r.GET("/users", user.GetUser)
     r.POST("/users/newUser", user.CreateUser)
+    r.GET("/users/:id", user.GetUserByID)
     r.GET("/productss", product.GetProducts)
     v1 := r.Group("/api/v1")
     groupProducts(v1, user)
