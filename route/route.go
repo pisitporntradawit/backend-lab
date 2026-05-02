@@ -14,6 +14,7 @@ type userInterface interface {
     GetUser(c *gin.Context)
     CreateUser(c *gin.Context)
     GetUserByID(c *gin.Context)
+    DeleteUser(c *gin.Context)
 }
 
 type productInterface interface {
@@ -27,6 +28,7 @@ func RouterAPI(user userInterface, product productInterface) *gin.Engine {
     r.GET("/users", user.GetUser)
     r.POST("/users/newUser", user.CreateUser)
     r.GET("/users/:id", user.GetUserByID)
+    r.DELETE("/users/:id", user.DeleteUser)
     r.GET("/productss", product.GetProducts)
     v1 := r.Group("/api/v1")
     groupProducts(v1, user)

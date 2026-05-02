@@ -13,6 +13,7 @@ type UserRepository interface {
 	Getuser(ctx context.Context) ([]model.UserModel, error)
 	CreateUser(ctx context.Context, newUser *model.UserModel) error
 	GetUserByID(ctx context.Context, id string) (*model.UserModel,error)
+	DeleteUser(ctx context.Context, id string) error
 }
 
 type Service struct {
@@ -56,4 +57,11 @@ func (s *Service) GetUserByID(ctx context.Context, id string) (*model.UserModel,
 		return nil, fmt.Errorf("invalid id: %w", err)
 	}
 	return s.repo.GetUserByID(ctx, id)
+}
+
+func (s *Service) DeleteUser(ctx context.Context, id string) error {
+	if _,err := uuid.Parse(id); err != nil {
+		return fmt.Errorf("invalid id: %w", err)
+	}
+	return s.repo.DeleteUser(ctx, id)
 }

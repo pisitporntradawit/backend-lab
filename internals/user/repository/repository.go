@@ -75,3 +75,18 @@ func (r *Repository) GetUserByID(ctx context.Context, id string) (*model.UserMod
 
 	return &user, nil
 }
+
+func (r *Repository) DeleteUser(ctx context.Context, id string) error {
+	objID, err := uuid.Parse(id)
+	if err != nil {
+		return fmt.Errorf("user.delete.repo %w", err)
+	}
+
+	query := "delete from users where id = $1"
+	_, err = r.db.Exec(ctx, query, objID)
+	if err != nil {
+		return fmt.Errorf("user.delete.repo after where id %w", err)
+	}
+
+	return nil
+}
