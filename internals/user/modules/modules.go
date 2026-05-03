@@ -8,14 +8,14 @@ import (
 )
 
 type Module struct {
-	Controller *handler.Controller
+	Handler *handler.Handler
 }
 
 func NewModule(db *pgxpool.Pool) *Module {
 	repo := repository.NewRepository(db)
 	svc := service.NewService(repo)
-	controller := handler.NewController(svc)
+	Handler := handler.NewHandler(svc)
 	return &Module{
-		Controller: controller,
+		Handler: Handler,
 	}
 }

@@ -1,11 +1,15 @@
 package login
 
-// import (
-// 	"context"
-// 	"fmt"
-// 	"github.com/gin-gonic/gin"
-// 	"net/http"
-// 	"time"
-// )
+import (
 
+)
 
+type Handler struct {
+	Service *Service
+}
+
+func NewHandler(service *Service) *Handler{
+	return &Handler{
+		Service : service,
+	}
+}

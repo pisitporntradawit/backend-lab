@@ -20,7 +20,7 @@ func main() {
 	defer DB.Close()
 	products := products.NewModule(DB)
 	user := modules.NewModule(DB)
-	router := route.RouterAPI(user.Controller, products.Controller)
+	router := route.RouterAPI(user.Handler, products.Controller)
 
 	router.Run(":" + Port)
 	

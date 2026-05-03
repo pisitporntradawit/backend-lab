@@ -10,15 +10,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Controller struct {
+type Handler struct {
 	Service *service.Service
 }
 
-func NewController(service *service.Service) *Controller {
-	return &Controller{Service: service}
+func NewHandler(service *service.Service) *Handler {
+	return &Handler{Service: service}
 }
 
-func (ctrl *Controller) CreateUser(c *gin.Context) {
+func (ctrl *Handler) CreateUser(c *gin.Context) {
 	var user model.UserModel
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -40,7 +40,7 @@ func (ctrl *Controller) CreateUser(c *gin.Context) {
 
 }
 
-func (ctrl *Controller) GetUser(c *gin.Context) {
+func (ctrl *Handler) GetUser(c *gin.Context) {
 	resultUser, err := ctrl.Service.Getuser(c.Request.Context())
 	if err != nil {
 		log.Printf("GetProducts error: %v", err)
@@ -52,7 +52,7 @@ func (ctrl *Controller) GetUser(c *gin.Context) {
 	c.JSON(http.StatusOK, resultUser)
 }
 
-func (ctrl *Controller) GetUserByID(c *gin.Context) {
+func (ctrl *Handler) GetUserByID(c *gin.Context) {
 	id := c.Param("id")
 
 	if id == "" {
@@ -79,7 +79,7 @@ func (ctrl *Controller) GetUserByID(c *gin.Context) {
 	})
 }
 
-func (ctrl *Controller) DeleteUser(c *gin.Context) {
+func (ctrl *Handler) DeleteUser(c *gin.Context) {
 	id := c.Param("id")
 	if id == "" {
 		c.JSON(http.StatusBadRequest, gin.H{
