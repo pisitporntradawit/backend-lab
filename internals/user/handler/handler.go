@@ -5,13 +5,9 @@ import (
 	"log"
 	"net/http"
 	"time"
-
 	"api/internals/user/model"
-	"api/internals/user/repository"
 	"api/internals/user/service"
-
 	"github.com/gin-gonic/gin"
-	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type Controller struct {
@@ -20,19 +16,6 @@ type Controller struct {
 
 func NewController(service *service.Service) *Controller {
 	return &Controller{Service: service}
-}
-
-type Module struct {
-	Controller *Controller
-}
-
-func NewModule(db *pgxpool.Pool) *Module {
-	repo := repository.NewRepository(db)
-	svc := service.NewService(repo)
-	controller := NewController(svc)
-	return &Module{
-		Controller: controller,
-	}
 }
 
 func (ctrl *Controller) CreateUser(c *gin.Context) {

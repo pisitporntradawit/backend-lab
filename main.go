@@ -3,7 +3,7 @@ package main
 import (
 	"api/config"
 	"api/internals/products"
-	"api/internals/user/handler"
+	"api/internals/user/modules"
 	"api/route"
 	"log"
 	"os"
@@ -19,7 +19,7 @@ func main() {
 	}
 	defer DB.Close()
 	products := products.NewModule(DB)
-	user := handler.NewModule(DB)
+	user := modules.NewModule(DB)
 	router := route.RouterAPI(user.Controller, products.Controller)
 
 	router.Run(":" + Port)

@@ -29,10 +29,16 @@ func (s *Service) CreateUser(ctx context.Context, newUser *model.UserModel) erro
 		return fmt.Errorf("service.user cannot be nil")
 	}
 
+	if newUser.Password != newUser.Repassword {
+		return fmt.Errorf("password not match")
+	}
+
 	hashPassword, err := bcrypt.GenerateFromPassword(
 		[]byte(newUser.Password),
 		bcrypt.DefaultCost,
 	)
+
+
 	if err != nil {
 		return fmt.Errorf("service.create password failed: %w", err)
 	}
