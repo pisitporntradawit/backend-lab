@@ -18,7 +18,7 @@ func NewHandler(service *service.Service) *Handler {
 	return &Handler{Service: service}
 }
 
-func (ctrl *Handler) CreateUser(c *gin.Context) {
+func (h *Handler) CreateUser(c *gin.Context) {
 	var user model.UserModel
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -27,7 +27,7 @@ func (ctrl *Handler) CreateUser(c *gin.Context) {
 		return
 	}
 
-	if err := ctrl.Service.CreateUser(c.Request.Context(), &user); err != nil {
+	if err := h.Service.CreateUser(c.Request.Context(), &user); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
 		})
@@ -40,8 +40,8 @@ func (ctrl *Handler) CreateUser(c *gin.Context) {
 
 }
 
-func (ctrl *Handler) GetUser(c *gin.Context) {
-	resultUser, err := ctrl.Service.Getuser(c.Request.Context())
+func (h *Handler) GetUser(c *gin.Context) {
+	resultUser, err := h.Service.Getuser(c.Request.Context())
 	if err != nil {
 		log.Printf("GetProducts error: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -52,7 +52,7 @@ func (ctrl *Handler) GetUser(c *gin.Context) {
 	c.JSON(http.StatusOK, resultUser)
 }
 
-func (ctrl *Handler) GetUserByID(c *gin.Context) {
+func (h *Handler) GetUserByID(c *gin.Context) {
 	id := c.Param("id")
 
 	if id == "" {
@@ -65,7 +65,7 @@ func (ctrl *Handler) GetUserByID(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	user, err := ctrl.Service.GetUserByID(ctx, id)
+	user, err := h.Service.GetUserByID(ctx, id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": err.Error(),
@@ -79,7 +79,7 @@ func (ctrl *Handler) GetUserByID(c *gin.Context) {
 	})
 }
 
-func (ctrl *Handler) DeleteUser(c *gin.Context) {
+func (h *Handler) DeleteUser(c *gin.Context) {
 	id := c.Param("id")
 	if id == "" {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -91,7 +91,7 @@ func (ctrl *Handler) DeleteUser(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	err := ctrl.Service.DeleteUser(ctx, id)
+	err := h.Service.DeleteUser(ctx, id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "user.handler.delete",

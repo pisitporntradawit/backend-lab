@@ -21,7 +21,11 @@ type productInterface interface {
 	GetProducts(c *gin.Context)
 }
 
-func RouterAPI(user userInterface, product productInterface) *gin.Engine {
+type loginInterface interface {
+	 Login(c *gin.Context)
+}
+
+func RouterAPI(user userInterface, product productInterface, login loginInterface) *gin.Engine {
 	r := gin.Default()
 
 	r.Use(cors.New(corsConfig()))
@@ -29,7 +33,7 @@ func RouterAPI(user userInterface, product productInterface) *gin.Engine {
 	// r.POST("/users/newUser", user.CreateUser)
 	// r.GET("/users/:id", user.GetUserByID)
 	// r.DELETE("/users/:id", user.DeleteUser)
-
+	r.POST("/login", login.Login)
 	r.GET("/productss", product.GetProducts)
 	v1 := r.Group("/api")
     groupUser(v1, user)
